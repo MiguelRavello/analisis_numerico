@@ -15,7 +15,8 @@ public:
 public:
     PLU(int,int);
     void desPLU(const vector<vector<T> > xs); //setear A
-    void print();
+    void proof();
+    vector<T> solucion(const vector<vector<T> > xs,const vector<T> bs);
 };
 
 template<class T>
@@ -65,7 +66,7 @@ void PLU<T>::desPLU(const vector<vector<T> > xs){
 }
 
 template<class T>
-void PLU<T>::print(){
+void PLU<T>::proof(){
     Matrix<T> t1;
     Matrix<T> t2;
     cout<<"..................."<<endl;
@@ -85,6 +86,26 @@ void PLU<T>::print(){
     cout<<"Matrix LU"<<endl;
     t2=m_L*m_U;
     cout<<t2<<endl;
+}
+
+template<class T>
+vector<T> PLU<T>::solucion(const vector<vector<T> > xs, const vector<T> bs){
+    this->desPLU(xs);
+    vector<T> ys(m_fila,0);
+    Matrix<T> B(m_fila,0);
+    B.insertCol(bs);
+
+    Matrix<T> PB;
+    PB=this->m_P * B;
+ //   cout<<PB<<endl;
+    vector<T> y_temp=PB.getCol(PB.m_col-1);
+    vector<T> y;
+    y=this->m_L.sust_progresiva(y_temp);
+ //   for(int i=0;i<m_fila;i++)
+ //       cout<<y_temp[i]<<" "<<y[i]<<endl;
+    vector<T> x;
+    x=this->m_U.sust_regresiva(y);
+    return x;
 }
 
 #endif

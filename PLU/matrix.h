@@ -35,7 +35,7 @@ public:
     void operator= (const Matrix &o);
 
     void resizeCol(int size);
-    void insertCol(const T*xs);
+    void insertCol(vector<T> xs);
     void inicializar();
     void setMatrix(const vector<vector<T> > xs);
     void zerox();
@@ -46,8 +46,9 @@ public:
     void escalonar();
     void swapRow(int fila_1,int fila_2);
     void escalonarPivote();
-    vector<T> sust_regresiva(const T*xs);
-    vector<T> elim_gauss(const T*xs); 
+    vector<T> sust_regresiva(vector<T> xs);
+    vector<T> sust_progresiva(vector<T> xs);
+    vector<T> elim_gauss(vector<T> xs);
 };
 
 template<class T>
@@ -179,10 +180,10 @@ void Matrix<T>::resizeCol(int nuevo){
 }
 
 template<class T>
-void Matrix<T>::insertCol(const T*xs){
+void Matrix<T>::insertCol(vector<T> xs){
     resizeCol(m_col+1);
     for(int i=0;i<m_row;i++)
-        m_matrix[i][m_col-1]=*(xs+i);
+        m_matrix[i][m_col-1]=xs[i];
 }
 
 template<class T>
@@ -245,22 +246,37 @@ vector<T> Matrix<T>::getCol(const int pos){
 }
 
 template<class T>
-vector<T> Matrix<T>::sust_regresiva(const T*xs){
+vector<T> Matrix<T>::sust_regresiva(vector<T> xs){
     vector<T> rpta(m_row,0);
     for(int i=m_row-1;i>=0;i--){
         T s=0;
-        for(int j=i;j<m_row;j++)
+        for(int j=i;j<m_row;j++){
             s+=m_matrix[i][j]*rpta[j];
-        rpta[i]=(*(xs+i)-s)/m_matrix[i][i];
+        }
+        rpta[i]=(xs[i]-s)/m_matrix[i][i];
     }
     return rpta;
 }
 
 template<class T>
-vector<T> Matrix<T>::elim_gauss(const T*xs){
+vector<T> Matrix<T>::sust_progresiva(vector<T> xs){
+    vector<T> rpta(m_row,0);
+    for(int i=0;i<m_row;i++){
+        T s=0;
+        for(int j=0;j<i;j++){
+            s+=m_matrix[i][j]*rpta[j];
+        }
+        rpta[i]=(xs[i]-s)/m_matrix[i][i];
+    }
+    return rpta;
+}
+
+template<class T>
+vector<T> Matrix<T>::elim_gauss(vector<T> xs){
     insertCol(xs);
     escalonarPivote();
-    vector<T> r=this->sust_regresiva(xs);
+    vector<T> temp=getCol(m_col-1);
+    vector<T> r=this->sust_regresiva(temp);
     return r;
 }
 

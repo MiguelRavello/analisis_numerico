@@ -2,12 +2,11 @@
 //#include"matrix.h"
 
 int main(){
-    vector<vector<double> > matriz = {{ 2,  2, 4, 5},
-                                      {-1, -1, 0, 1},
-                                      { 3,  1, 3, 1},
-                                      { 4,  0, 1, 4}};
-    vector<double> b= {1, 2, 3, 4};
-    PLU<double> px(4,4);
+    vector<vector<double> > matriz = {{ 4, -2, 1},
+                                      {20, -7, 12},
+                                      {-8, 131, 17}};
+    vector<double> b= {11, 70, 17};
+    PLU<double> px(3,3);
     vector<double> rpta=px.solucion(matriz,b);
     px.proof();
     cout<<"..............................."<<endl;
@@ -16,3 +15,5 @@ int main(){
         cout<<*it<<" "<<endl;
     return 0;
 }
+
+

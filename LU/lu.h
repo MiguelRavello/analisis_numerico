@@ -35,6 +35,10 @@ void LU<T>::desLU(const vector<vector<T> > xs){
     this->m_U=this->m_A;
 
     for(int j=0;j<this->m_U.m_row - 1;j++){
+        if(this->m_U.m_matrix[j][j] == 0){
+            throw "!La matriz A no tiene descomposicion LU!";
+            break;
+        }
         for(int i=j+1;i<this->m_U.m_row;i++){
             T m=this->m_U.m_matrix[i][j]/this->m_U.m_matrix[j][j];
             this->m_L.m_matrix[i][j]=m;

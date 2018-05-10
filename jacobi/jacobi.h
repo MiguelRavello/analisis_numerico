@@ -4,14 +4,12 @@
 #include"matrix.h"
 #include<cmath>
 
-template<class T>
-T sumArr(vector<T>);
 
 template<class T>
 T sumArr(vector<T> xs){
     T ans=0;
-    for(vector<T>::iterator it=xs.begin();it!=xs.end();it++){
-        ans+=abs(*(it));
+    for(int i=0;i<xs.size();i++){
+        ans+=abs(xs[i]);
     }
     return ans;
 }
@@ -31,7 +29,7 @@ public:
         this->m_b=c_b;
     }
 
-    void MetJacobi(const vector<T> &Xo,int n){
+    void MetJacobi(vector<T> &Xo,int n){
         for(int k=0;k<n;k++){
             for(int i=0;i<this->m_A.m_row;i++){
                 T s=0;
@@ -40,16 +38,15 @@ public:
                         continue;
                     s+=this->m_A.m_matrix[i][j]*Xo[j];
                 }
-                Xo[j]=(b[j]-s)/this->m_A.m_matrix[i][i];
+                Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }
         }
         Matrix<T> c_X(Xo);
         this->m_X=c_X;
     }
 
-    void MetJacobi2(const vector<T> &Xo,T tol){
-        vector<T> X(Xo.size(),1);
-        T rpta=abs(sumArr(X)-sumArr(Xo));
+    void MetJacobi2(vector<T> &Xo,T tol){
+        T rpta=1;
         while(rpta>tol){
             vector<T> copia(Xo);
             for(int i=0;i<this->m_A.m_row;i++){
@@ -59,12 +56,12 @@ public:
                         continue;
                     s+=this->m_A.m_matrix[i][j]*Xo[j];
                 }
-                Xo[j]=(b[j]-s)/this->m_A.m_matrix[i][i];
+                Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }
-            rpta=abs(sumArr(copia)-sumArr(Xo));
+            rpta=abs(sumArr<T>(copia)-sumArr<T>(Xo));
         }
-        this->m_X(Xo.size(),0);
-        this->m_X.insertCol(Xo);
+        Matrix<T> c_X(Xo);
+        this->m_X=c_X;
     }
 
 };

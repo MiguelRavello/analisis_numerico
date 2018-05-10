@@ -55,7 +55,7 @@ public:
                 for(int j=0;j<this->m_A.m_col;j++){
                     if(j==i)
                         continue;
-                    s+=this->m_A.m_matrix[i][j]*copia[j];
+                    s+=this->m_A.m_matrix[i][j]*copia[j]; //esta es la diferencia con seidel
                 }
                 Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }

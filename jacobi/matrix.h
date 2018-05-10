@@ -14,6 +14,8 @@ public:
 public:
 	Matrix():m_row(0),m_col(0){}
 	Matrix(int,int);
+    Matrix(const vector<vector<T> > xs);
+    Matrix(const vector<T> xs); //matrix m_filas x cero;
     Matrix(const Matrix &m);
     ~Matrix(){
         for(int i=0;i<m_row;i++)
@@ -35,7 +37,7 @@ public:
     void operator= (const Matrix &o);
 
     void resizeCol(int size);
-    void insertCol(vector<T> xs);
+    void insertCol(const vector<T> xs);
     void inicializar();
     void setMatrix(const vector<vector<T> > xs);
     void zerox();
@@ -46,9 +48,9 @@ public:
     void escalonar();
     void swapRow(int fila_1,int fila_2);
     void escalonarPivote();
-    vector<T> sust_regresiva(vector<T> xs);
-    vector<T> sust_progresiva(vector<T> xs);
-    vector<T> elim_gauss(vector<T> xs);
+    vector<T> sust_regresiva(const vector<T> xs);
+    vector<T> sust_progresiva(const vector<T> xs);
+    vector<T> elim_gauss(const vector<T> xs);
 };
 
 template<class T>
@@ -59,6 +61,25 @@ Matrix<T>::Matrix(int fila,int col):m_row(fila),m_col(col){
     }
 }
 
+template<class T>
+Matrix<T>::Matrix(const vector<vector<T> > xs):m_row(xs.size()),m_col(xs[0].size()){
+    m_matrix = new T*[m_row];
+    for(int k=0;k<m_row;k++)
+        m_matrix[k]=new T[m_col];
+    for (int i=0; i < m_row; i++){
+        for (int j=0; j < m_col; j++){
+            *(*(m_matrix + i) + j)=xs[i][j];
+        }
+    }
+}
+
+template<class T>
+Matrix<T>::Matrix(const vector<T> xs):m_row(xs.size()),m_col(0){
+    m_matrix = new T*[m_row];
+    for(int k=0;k<m_row;k++)
+        m_matrix[k]=new T[m_col];
+    insertCol(xs);
+}
 template<class T>
 Matrix<T>::Matrix(const Matrix &m):m_row(m.m_row),m_col(m.m_col){
     m_matrix = new T*[m_row];
@@ -71,6 +92,7 @@ Matrix<T>::Matrix(const Matrix &m):m_row(m.m_row),m_col(m.m_col){
         }
     }
 }
+
 template<class T>
 void Matrix<T>::inicializar(){
     cout<<"ingrese los valores de la matrix: "<<endl;
@@ -180,7 +202,7 @@ void Matrix<T>::resizeCol(int nuevo){
 }
 
 template<class T>
-void Matrix<T>::insertCol(vector<T> xs){
+void Matrix<T>::insertCol(const vector<T> xs){
     resizeCol(m_col+1);
     for(int i=0;i<m_row;i++)
         m_matrix[i][m_col-1]=xs[i];
@@ -246,7 +268,7 @@ vector<T> Matrix<T>::getCol(const int pos){
 }
 
 template<class T>
-vector<T> Matrix<T>::sust_regresiva(vector<T> xs){
+vector<T> Matrix<T>::sust_regresiva(const vector<T> xs){
     vector<T> rpta(m_row,0);
     for(int i=m_row-1;i>=0;i--){
         T s=0;
@@ -259,7 +281,7 @@ vector<T> Matrix<T>::sust_regresiva(vector<T> xs){
 }
 
 template<class T>
-vector<T> Matrix<T>::sust_progresiva(vector<T> xs){
+vector<T> Matrix<T>::sust_progresiva(const vector<T> xs){
     vector<T> rpta(m_row,0);
     for(int i=0;i<m_row;i++){
         T s=0;
@@ -272,7 +294,7 @@ vector<T> Matrix<T>::sust_progresiva(vector<T> xs){
 }
 
 template<class T>
-vector<T> Matrix<T>::elim_gauss(vector<T> xs){
+vector<T> Matrix<T>::elim_gauss(const vector<T> xs){
     insertCol(xs);
     escalonarPivote();
     vector<T> temp=getCol(m_col-1);

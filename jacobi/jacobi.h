@@ -24,14 +24,14 @@ public:
     Matrix<T> m_b;
 
 public:
-    Jacobi(){}
+    Jacobi(const vector<vector<T> > A, const vector<T> b){
+        Matrix<T> c_A(A);
+        this->m_A=c_A;
+        Matrix<T> c_b(b);
+        this->m_b=c_b;
+    }
 
-    void MetJacobi(const vector<vector<T> > A, const vector<T> b,const vector<T> &Xo,int n){
-        this->m_A(A.size);// completar
-
-        this->m_A.setMatrix(A)
-        this->m_B(b.size(),0);
-        this->m_B.insertCol(b);
+    void MetJacobi(const vector<T> &Xo,int n){
         for(int k=0;k<n;k++){
             for(int i=0;i<this->m_A.m_row;i++){
                 T s=0;
@@ -43,17 +43,14 @@ public:
                 Xo[j]=(b[j]-s)/this->m_A.m_matrix[i][i];
             }
         }
-        this->m_X(Xo.size(),0);
-        this->m_X.insertCol(Xo);
+        Matrix<T> c_X(Xo);
+        this->m_X=c_X;
     }
 
-    void MetJacobi2(const vector<vector<T> > A, const vector<T> b,const vector<T> &Xo,T tol){
-        this->m_A.setMatrix(A)
-        this->m_B(b.size(),0);
-        this->m_B.insertCol(b);
+    void MetJacobi2(const vector<T> &Xo,T tol){
         vector<T> X(Xo.size(),1);
         T rpta=abs(sumArr(X)-sumArr(Xo));
-        while(rpta>tol)
+        while(rpta>tol){
             vector<T> copia(Xo);
             for(int i=0;i<this->m_A.m_row;i++){
                 T s=0;

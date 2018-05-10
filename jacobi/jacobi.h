@@ -31,12 +31,13 @@ public:
 
     void MetJacobi(vector<T> &Xo,int n){
         for(int k=0;k<n;k++){
+            vector<T> copia(Xo);
             for(int i=0;i<this->m_A.m_row;i++){
                 T s=0;
                 for(int j=0;j<this->m_A.m_col;j++){
                     if(j==i)
                         continue;
-                    s+=this->m_A.m_matrix[i][j]*Xo[j];
+                    s+=this->m_A.m_matrix[i][j]*copia[j];
                 }
                 Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }
@@ -54,7 +55,7 @@ public:
                 for(int j=0;j<this->m_A.m_col;j++){
                     if(j==i)
                         continue;
-                    s+=this->m_A.m_matrix[i][j]*Xo[j];
+                    s+=this->m_A.m_matrix[i][j]*copia[j];
                 }
                 Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }

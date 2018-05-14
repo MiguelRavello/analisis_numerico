@@ -15,6 +15,15 @@ T sumArr(vector<T> xs){
 }
 
 template<class T>
+T normaP(vector<T> xs,T p){
+    T ans=0;
+    for(int i=0;i.size();i++){
+        ans+=pow(xs[i],p);
+    }
+    return pow(ans,1.0/p);
+}
+
+template<class T>
 class Seidel {
 public:
     Matrix<T> m_A;

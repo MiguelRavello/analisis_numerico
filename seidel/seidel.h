@@ -17,8 +17,8 @@ T sumArr(vector<T> xs){
 template<class T>
 T normaP(vector<T> xs,T p){
     T ans=0;
-    for(int i=0;i.size();i++){
-        ans+=pow(xs[i],p);
+    for(int i=0;i<xs.size();i++){
+        ans+=abs(pow(xs[i],p));
     }
     return pow(ans,1.0/p);
 }
@@ -72,7 +72,24 @@ public:
         Matrix<T> c_X(Xo);
         this->m_X=c_X;
     }
-
+    void MetSeidel_P(vector<T> &Xo,const T p,const T tol){
+        T rpta=1;
+        while(rpta>tol){
+            vector<T> copia(Xo);
+            for(int i=0;i<this->m_A.m_row;i++){
+                T s=0;
+                for(int j=0;j<this->m_A.m_col;j++){
+                    if(j==i)
+                        continue;
+                    s+=this->m_A.m_matrix[i][j]*Xo[j];
+                }
+                Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
+            }
+            rpta=abs(normaP<T>(copia,p)-normaP<T>(Xo,p));
+        }
+        Matrix<T> c_X(Xo);
+        this->m_X=c_X;
+    }
 };
 
 

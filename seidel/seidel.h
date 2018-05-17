@@ -86,8 +86,14 @@ public:
                 Xo[i]=(this->m_b.m_matrix[i][0]-s)/this->m_A.m_matrix[i][i];
             }
             rpta=abs(normaP<T>(copia,p)-normaP<T>(Xo,p));
+
         }
+        for(int i=0;i<Xo.size();i++){
+            cout<<Xo[i];
+        }
+        cout<<endl;
         Matrix<T> c_X(Xo);
+
         this->m_X=c_X;
     }
 };

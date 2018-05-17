@@ -26,11 +26,11 @@ nat_t puntofijo(nat_t (*g)(nat_t),nat_t &po,nat_t tol){
 }
 
 nat_t fun1(nat_t x){
-    return (pow(x,2)-1)/3.0;
+    return acos(-1*exp(-1*pow(x,2)))/2;
 }
 
 int main(){
-    nat_t seed=3;
+    nat_t seed=0.5;
     nat_t tol=0.001;
     nat_t r;
     r=puntofijo(fun1,seed,tol);

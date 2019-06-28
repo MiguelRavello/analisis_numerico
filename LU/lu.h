@@ -2,10 +2,11 @@
 #define LU_H
 
 #include"matrix.h"
+#include"matrix.cpp"
 
 template<class T>
 class LU{
-public:
+private:
     int m_fila;
     int m_columna;
     Matrix<T> m_A;

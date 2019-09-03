@@ -307,3 +307,37 @@ vector<T> Matrix<T>::elim_gauss(vector<T> xs){
     return r;
 }
 
+template<class T>
+int Matrix<T>::rango(){
+    Matrix<T> C=*this;
+    int total=0;
+    int contador=0;
+    C.escalonarPivote();
+    cout<<"matrix escalonada"<<endl;
+    cout<<C<<endl;
+    for(int i=0;i<C.m_row;i++){
+        for(int j=0;j<C.m_col;j++){
+            total+=C.m_matrix[i][j];
+        }
+        if(total!=0)
+            contador++;
+        total=0;
+    }
+    return contador;
+}
+
+template<class T>
+bool Matrix<T>::rangoAumentadoComparado(vector<T> xs){
+    Matrix<T> A=*this;
+    Matrix<T> Ab=*this;
+    Ab.insertCol(xs);
+    cout<<"matrix A"<<endl;
+    cout<<A<<endl;
+    cout<<"matrix aumentada"<<endl;
+    cout<<Ab<<endl;
+    int i=A.rango();
+    int j=Ab.rango();
+    cout<<"rango A: "<<i<<endl;
+    cout<<"rango Ab: "<<j<<endl;
+    return i==j;
+}

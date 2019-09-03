@@ -1,10 +1,11 @@
 #include"matrix.h"
 #include"matrix.cpp"
 int main(){
-    /*vector<vector<double> > matriz = {{ 0, -2, 1},
-                                      {20, -7, 12},
-                                      {-8, 13, 17}};*/
-    vector<vector<double> > matriz = {{ 1, 2, -1, 2},
+    vector<double> xs={1,2,3};
+    vector<vector<double> > matriz = {{ 1, 2, 1},
+                                      {-1, 1, 1},
+                                      {1, -1, 2}};
+    /*vector<vector<double> > matriz = {{ 1, 2, -1, 2},
                                       {2, 2, -1, 1},
                                       {-1, -1, 1, -1},
                                       {1, 2, 3, 4}};
@@ -18,6 +19,9 @@ int main(){
     cout<<C<<endl;
     cout<<"............"<<endl;
     Matrix<double> T=A.transpuesta();
-    cout<<T<<endl;
+    cout<<T<<endl;*/
+    Matrix<double> A(3,3);
+    A.setMatrix(matriz);
+    cout<<A.rangoAumentadoComparado(xs);
     return 0;
 }

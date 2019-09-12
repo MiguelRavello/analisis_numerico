@@ -186,14 +186,18 @@ void Matrix<T>::escalonar(){
 template<class T>
 void Matrix<T>::escalonarPivote(){
     for(int j=0;j<m_row-1;j++){
+        /* max_val elemento pivote */
         T max_val=m_matrix[j][j];
         int max_file=j;
         for(int x=j+1;x<m_row;x++){
+            /* hallando el valor maximo para q se pivote */
             if(max_val<m_matrix[x][j]){
                 max_val=m_matrix[x][j];
                 max_file=x;
             }
         }
+        /* donde esta la fila con el valor q va ser pivote
+         * se lo lleva para arriba */
         if(j!=max_file)
             swapRow(j,max_file);
         for(int i=j+1;i<m_row;i++){
@@ -204,6 +208,49 @@ void Matrix<T>::escalonarPivote(){
         }
     }
 }
+
+template<class T>
+void Matrix<T>::escalonadoReducido(){
+    for(int j=0;j<m_row-1;j++){
+        /* max_val elemento pivote */
+        T max_val=m_matrix[j][j];
+        int max_file=j;
+        for(int x=j+1;x<m_row;x++){
+            /* hallando el valor maximo para q se pivote */
+            if(max_val<m_matrix[x][j]){
+                max_val=m_matrix[x][j];
+                max_file=x;
+            }
+        }
+        /* donde esta la fila con el valor q va ser pivote
+         * se lo lleva para arriba */
+        if(j!=max_file)
+            swapRow(j,max_file);
+        for(int i=j+1;i<m_row;i++){
+            T m=m_matrix[i][j]/m_matrix[j][j];
+            for(int k=0;k<m_col;k++){
+                m_matrix[i][k]-=m*m_matrix[j][k];
+            }
+        }
+    }
+    // igualando a 1 la diagonal principal
+    for(int i=0;i<m_row;i++){
+        T max_val=m_matrix[i][i];
+        for(int j=0;j<m_col;j++){
+            m_matrix[i][j]/=max_val;
+        }
+    }
+    //escalonamimento superior 000
+    for(int j=m_row-1;j>0;j--){
+        for(int i=j-1;i>-1;i--){
+            T m=m_matrix[i][j]/m_matrix[j][j];
+            for(int k=0;k<m_col;k++){
+                m_matrix[i][k]-=m*m_matrix[j][k];
+            }
+        }
+    }
+}
+
 
 template<class T>
 Matrix<T> Matrix<T>::inversa(){
@@ -300,7 +347,9 @@ vector<T> Matrix<T>::sust_progresiva(vector<T> xs){
 
 template<class T>
 vector<T> Matrix<T>::elim_gauss(vector<T> xs){
+    /* matriz aumentada */
     insertCol(xs);
+    /* matriz escalonada reducida por filas */
     escalonarPivote();
     vector<T> temp=getCol(m_col-1);
     vector<T> r=this->sust_regresiva(temp);
@@ -340,4 +389,6 @@ bool Matrix<T>::rangoAumentadoComparado(vector<T> xs){
     cout<<"rango A: "<<i<<endl;
     cout<<"rango Ab: "<<j<<endl;
     return i==j;
+    /*si el rango(A)==rango(Ab) tiene solucion
+     * */
 }

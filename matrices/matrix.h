@@ -42,6 +42,7 @@ public:
     void escalonar();
     void swapRow(int fila_1,int fila_2);
     void escalonarPivote();
+    void escalonadoReducido();
     vector<T> sust_regresiva(vector<T> xs);
     vector<T> sust_progresiva(vector<T> xs);
     vector<T> elim_gauss(vector<T> xs);

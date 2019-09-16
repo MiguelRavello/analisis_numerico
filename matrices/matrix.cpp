@@ -392,3 +392,35 @@ bool Matrix<T>::rangoAumentadoComparado(vector<T> xs){
     /*si el rango(A)==rango(Ab) tiene solucion
      * */
 }
+
+template<class T>
+Matrix<T> Matrix<T>::cambioBase(const vector<vector<T> > xs){
+    Matrix<T> base1=*this;
+    base1=base1.transpuesta();
+    Matrix base2(m_row,m_col);
+    base2.setMatrix(xs);
+    base2=base2.transpuesta();
+    Matrix<T> R(m_row,0);
+    for(int j=0;j<m_col;j++){
+        vector<T> insertado=base1.getCol(j);
+        Matrix<T> base_2=base2;
+        vector<T> rpta=base_2.elim_gauss(insertado);
+        R.insertCol(rpta);
+    }
+    return R;
+}
+
+template<class T>
+Matrix<T> Matrix<T>::coordenadaB1_B2(const vector<vector<T> > xs,vector<T> ys){
+    Matrix<T> M12=this->cambioBase(xs);
+    Matrix<T> B1=this->transpuesta();
+    vector<T> coordenadaB1=B1.elim_gauss(ys);
+    Matrix<T> CB1(m_row,0);
+    CB1.insertCol(coordenadaB1);
+    cout<<"matrix cambio de base12"<<endl;
+    cout<<M12<<endl;
+    cout<<"coordenadas en B1"<<endl;
+    cout<<CB1<<endl;
+    Matrix<T> R=M12*CB1;
+    return R;
+}

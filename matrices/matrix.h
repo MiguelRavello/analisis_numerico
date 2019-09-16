@@ -48,6 +48,8 @@ public:
     vector<T> elim_gauss(vector<T> xs);
     int rango();
     bool rangoAumentadoComparado(vector<T> xs);
-};
 
+    Matrix<T> cambioBase(const vector<vector<T> > xs);
+    Matrix<T> coordenadaB1_B2(const vector<vector<T> > xs,vector<T> ys);
+};
 #endif

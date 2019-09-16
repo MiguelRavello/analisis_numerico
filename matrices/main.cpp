@@ -1,15 +1,14 @@
 #include"matrix.h"
 #include"matrix.cpp"
 int main(){
-    vector<double> xs={34,0,16};
-    vector<vector<double> > matriz = {{ 1.06, 0, 2},
-                                      {0.27,-2.6512, 1},
-                                      {1, 1, 0}};
-    /*vector<vector<double> > matriz = {{ 2, 3, -1, 4},
-                                      {1, -1, 1, 1},
-                                      {3, -2, 1, 2},
-                                      {1, 2, 3, 4}};
-    Matrix<double> A(4,4), B(4,4);
+    vector<double> xs={1,2,3};
+    vector<vector<double> > b1 = {{ 1, 0, 0},
+                                  { 1, 1, 0},
+                                  { 1, 1, 1}};
+    vector<vector<double> > b2 = {{ 1, 1, 0},
+                                  { 1, 0, 1},
+                                  { 0, 1, 1}};
+  /*Matrix<double> A(4,4), B(4,4);
     A.setMatrix(matriz);
     cout<<A<<endl;
     Matrix<double> C;
@@ -24,12 +23,19 @@ int main(){
     /*Matrix<double> A(3,3);
     A.setMatrix(matriz);
     cout<<A.rangoAumentadoComparado(xs);*/
-    /*matrix escalonada reducida*/
+    /*matrix escalonada reducida
     Matrix<double> A(3,3);
     A.setMatrix(matriz);
     A.insertCol(xs);
     cout<<A<<endl;
     A.escalonadoReducido();
-    cout<<A<<endl;
+    cout<<A<<endl;*/
+    Matrix<double> A(3,3);
+    A.setMatrix(b1);
+    /*Matrix<double> M12=A.cambioBase(b2);
+    cout<<M12<<endl;*/
+    Matrix<double> R=A.coordenadaB1_B2(b2,xs);
+    cout<<"coordenadas en B2"<<endl;
+    cout<<R<<endl;
     return 0;
 }

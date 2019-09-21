@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<vector>
+#include<cmath>
 using namespace std;
 
 template<class T>
@@ -29,7 +30,7 @@ public:
     void operator= (const Matrix &o);
 
     void resizeCol(int size);
-    void insertCol(vector<T> xs);
+    void insertCol(const vector<T> xs);
     void inicializar();
     void setMatrix(const vector<vector<T> > xs);
     void zerox();
@@ -46,10 +47,11 @@ public:
     vector<T> sust_regresiva(vector<T> xs);
     vector<T> sust_progresiva(vector<T> xs);
     vector<T> elim_gauss(vector<T> xs);
+    vector<T> elim_gauss_reducido(const vector<T> xs);
     int rango();
-    bool rangoAumentadoComparado(vector<T> xs);
+    bool rangoAumentadoComparado(const vector<T> xs);
 
     Matrix<T> cambioBase(const vector<vector<T> > xs);
-    Matrix<T> coordenadaB1_B2(const vector<vector<T> > xs,vector<T> ys);
+    Matrix<T> coordenadaB1_B2(const vector<vector<T> > xs,const vector<T> ys);
 };
 #endif

@@ -148,7 +148,7 @@ void Matrix<T>::resizeCol(int nuevo){
 }
 
 template<class T>
-void Matrix<T>::insertCol(vector<T> xs){
+void Matrix<T>::insertCol(const vector<T> xs){
     resizeCol(m_col+1);
     for(int i=0;i<m_row;i++)
         m_matrix[i][m_col-1]=xs[i];
@@ -191,7 +191,7 @@ void Matrix<T>::escalonarPivote(){
         int max_file=j;
         for(int x=j+1;x<m_row;x++){
             /* hallando el valor maximo para q se pivote */
-            if(max_val<m_matrix[x][j]){
+            if(max_val<abs(m_matrix[x][j])){
                 max_val=m_matrix[x][j];
                 max_file=x;
             }
@@ -217,7 +217,7 @@ void Matrix<T>::escalonadoReducido(){
         int max_file=j;
         for(int x=j+1;x<m_row;x++){
             /* hallando el valor maximo para q se pivote */
-            if(max_val<m_matrix[x][j]){
+            if(max_val<abs(m_matrix[x][j])){
                 max_val=m_matrix[x][j];
                 max_file=x;
             }
@@ -250,7 +250,6 @@ void Matrix<T>::escalonadoReducido(){
         }
     }
 }
-
 
 template<class T>
 Matrix<T> Matrix<T>::inversa(){
@@ -347,48 +346,81 @@ vector<T> Matrix<T>::sust_progresiva(vector<T> xs){
 
 template<class T>
 vector<T> Matrix<T>::elim_gauss(vector<T> xs){
+    bool verdad=rangoAumentadoComparado(xs);
     /* matriz aumentada */
-    insertCol(xs);
-    /* matriz escalonada reducida por filas */
-    escalonarPivote();
-    vector<T> temp=getCol(m_col-1);
-    vector<T> r=this->sust_regresiva(temp);
-    return r;
+    if(verdad){
+        insertCol(xs);
+        /* matriz escalonada reducida por filas */
+        escalonarPivote();
+        vector<T> temp=getCol(m_col-1);
+        vector<T> r=this->sust_regresiva(temp);
+        return r;
+    }
+    /* tiene infinitas soluciones o es inconsistente */
+    vector<T> nulo(m_row,-1);
+    return nulo;
+}
+
+template<class T>
+vector<T> Matrix<T>::elim_gauss_reducido(const vector<T> xs){
+    bool verdad=rangoAumentadoComparado(xs);
+    if(verdad){
+        insertCol(xs);
+        escalonadoReducido();
+        vector<T> r=getCol(m_col-1);
+        return r;
+    }
+    /* tiene infinitas soluciones o es inconsistente */
+    vector<T> nulo(m_row,-1);
+    return nulo;
 }
 
 template<class T>
 int Matrix<T>::rango(){
     Matrix<T> C=*this;
-    int total=0;
-    int contador=0;
+    bool verdad=true;
+    /* asumimos q no tiene filas nulas */
+    int contador=m_row;
     C.escalonarPivote();
-    cout<<"matrix escalonada"<<endl;
-    cout<<C<<endl;
     for(int i=0;i<C.m_row;i++){
         for(int j=0;j<C.m_col;j++){
-            total+=C.m_matrix[i][j];
+            /*recorre la fila buscando un elemento diferente de cero*/
+            if(C.m_matrix[i][j]!=0){
+                verdad=false;
+                break;
+            }
         }
-        if(total!=0)
-            contador++;
-        total=0;
+        if(verdad){
+            /* cuando no lo encuentra, el rango inicial se reduce */
+            contador--;
+        }
+        verdad=true;
     }
     return contador;
 }
 
 template<class T>
-bool Matrix<T>::rangoAumentadoComparado(vector<T> xs){
+bool Matrix<T>::rangoAumentadoComparado(const vector<T> xs){
     Matrix<T> A=*this;
     Matrix<T> Ab=*this;
     Ab.insertCol(xs);
-    cout<<"matrix A"<<endl;
-    cout<<A<<endl;
-    cout<<"matrix aumentada"<<endl;
-    cout<<Ab<<endl;
     int i=A.rango();
     int j=Ab.rango();
-    cout<<"rango A: "<<i<<endl;
-    cout<<"rango Ab: "<<j<<endl;
-    return i==j;
+    if(i==j){
+        if(m_row==i){
+            //cout<<"el sistema tiene solucion unica"<<endl;
+            return true;
+        }
+        else{
+            //cout<<"el sistema tiene infinitas soluciones"<<endl;
+            return false;
+        }
+    }
+    else{
+        //cout<<"el sistema no tiene solucion"<<endl;
+        return false;
+    }
+    /* el sistema no tiene solucion  */
     /*si el rango(A)==rango(Ab) tiene solucion
      * */
 }
@@ -396,31 +428,43 @@ bool Matrix<T>::rangoAumentadoComparado(vector<T> xs){
 template<class T>
 Matrix<T> Matrix<T>::cambioBase(const vector<vector<T> > xs){
     Matrix<T> base1=*this;
+    /* Los vectores de B1 les hago la transpuesta
+     * dado que es la forma para q entre en un
+     * sistema de ecuaciones */
     base1=base1.transpuesta();
     Matrix base2(m_row,m_col);
     base2.setMatrix(xs);
     base2=base2.transpuesta();
+    /* creo la matriz respuesta R de m_row filas 
+     * la cual se le va insertar las coordenadas
+     * de la elimininacion de gauss
+     * de cada vector de B1 */
     Matrix<T> R(m_row,0);
     for(int j=0;j<m_col;j++){
         vector<T> insertado=base1.getCol(j);
         Matrix<T> base_2=base2;
-        vector<T> rpta=base_2.elim_gauss(insertado);
+        vector<T> rpta=base_2.elim_gauss_reducido(insertado);
         R.insertCol(rpta);
     }
     return R;
+    /* rpta son las coordenadas de a1v1+a2v2+...+anvn para B1 */
 }
 
 template<class T>
-Matrix<T> Matrix<T>::coordenadaB1_B2(const vector<vector<T> > xs,vector<T> ys){
+Matrix<T> Matrix<T>::coordenadaB1_B2(const vector<vector<T> > xs,const vector<T> ys){
+    /* Matriz cambio de base de B1 a B2 */
     Matrix<T> M12=this->cambioBase(xs);
     Matrix<T> B1=this->transpuesta();
-    vector<T> coordenadaB1=B1.elim_gauss(ys);
+    /* Coordenadas en B1 del vector v::ys*/
+    vector<T> coordenadaB1=B1.elim_gauss_reducido(ys);
     Matrix<T> CB1(m_row,0);
     CB1.insertCol(coordenadaB1);
-    cout<<"matrix cambio de base12"<<endl;
+    cout<<"matrix cambio de base de B1 a B2"<<endl;
     cout<<M12<<endl;
-    cout<<"coordenadas en B1"<<endl;
+    cout<<"coordenadas de v en B1"<<endl;
     cout<<CB1<<endl;
+    cout<<"coordenadas de v en B2"<<endl;
     Matrix<T> R=M12*CB1;
+    cout<<R<<endl;
     return R;
 }

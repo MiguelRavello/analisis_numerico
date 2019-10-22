@@ -319,6 +319,14 @@ vector<T> Matrix<T>::getCol(const int pos){
 }
 
 template<class T>
+vector<T> Matrix<T>::getFila(const int pos){
+    vector<T> xs;
+    for(int i=0;i<m_col;i++)
+        xs.push_back(m_matrix[pos][i]);
+    return xs;
+}
+
+template<class T>
 vector<T> Matrix<T>::sust_regresiva(vector<T> xs){
     vector<T> rpta(m_row,0);
     for(int i=m_row-1;i>=0;i--){
@@ -468,3 +476,35 @@ Matrix<T> Matrix<T>::coordenadaB1_B2(const vector<vector<T> > xs,const vector<T>
     cout<<R<<endl;
     return R;
 }
+
+template<class T>
+Matrix<T> Matrix<T>::gramSchmith(){
+    Matrix<T> G(m_row,m_col);
+    vector<vector<T> > xs;
+    for(int i=0;i<m_row;i++){
+        vector<T> temp1(m_col,0);
+        vector<T> a=this->getFila(i);
+        for(int j=0;j<i;j++){
+            vector<T> b=xs[j];
+            T k=productoInterno<T>(a,b);
+            vector<T> temp2=productoPorEscalar<T>(k,b);
+            temp1=sumaVectores<T>(temp1,temp2);
+        }
+        if(temp1.size()==0){
+            vector<T> temp3=a;
+            T modulo=1.0/sqrt(productoInterno<T>(temp3,temp3));
+            temp3=productoPorEscalar<T>(modulo,temp3);
+            xs.push_back(temp3);
+        }
+        else{
+            temp1=productoPorEscalar<T>(-1,temp1);
+            vector<T> temp3=sumaVectores<T>(a,temp1);
+            T modulo=1.0/sqrt(productoInterno<T>(temp3,temp3));
+            temp3=productoPorEscalar<T>(modulo,temp3);
+            xs.push_back(temp3);
+        }
+    }
+    G.setMatrix(xs);
+    return G;
+}
+
